@@ -88,7 +88,7 @@
     #seller.name\
     #seller.address\
     #v(0.5em)
-    #if seller.at("uid") != none {[UID: #seller.uid]}
+    #if seller.at("uid", default: none) != none {[UID: #seller.uid]}
   ]
 
   place(top + left, dx: 0.5cm, dy: 4cm, [
@@ -96,7 +96,7 @@
     #client.full-name\
     #client.address\
     #v(0.5em)
-    #if client.at("uid") != none {[UID: #client.uid]}
+    #if client.at("uid", default: none) != none {[UID: #client.uid]}
   ])
 
   context {
@@ -189,6 +189,7 @@
       bic: [BIC:],
       amount: [Amount:],
       reference: [Reference:],
+      pay-via-qr: [Payment by QR code],
     ),
     kleinunternehmer-regelung: [In accordance with § 6. Abs. 1 Z 27 (Kleinunternehmerregelung) relieved of VAT.],
     delivery-date: if delivery-date == none { [The delivery date is, unless otherwise specified, equivalent to the invoice date.] } else { [The delivery date is, unless otherwise specified, on or in #delivery-date.] },
@@ -204,9 +205,10 @@
       bic: [BIC:],
       amount: [Betrag:],
       reference: [Zahlungsreferenz:],
+      pay-via-qr: [Zahlung via QR Code],
     ),
-    kleinunternehmer-regelung: [Gemäß § 6. Abs. 1 Z 27 (Kleinunternehmerregelung) von der USt. ausgenommen.],
-    delivery-date: if delivery-date == none { [Der Lieferzeitpunkt ist, falls nicht anders angegeben, das Rechnungsdatum.] } else { [Der Lieferzeitpunkt ist, falls nicht anders angegeben, am oder im #delivery-date.] },
+    kleinunternehmer-regelung: [Gemäß § 6. Abs. 1 Z 27 UStG (Kleinunternehmerregelung) von der USt. ausgenommen.],
+    delivery-date: if delivery-date == none { [Der Lieferzeitpunkt ist, falls nicht anders angegeben, das Rechnungsdatum.] } else { [Der Lieferzeitpunkt/Lieferzeitraum ist, falls nicht anders angegeben, am/im #delivery-date.] },
     closing: [Mit vielem Dank für Ihr Vertrauen und freundlichen Grüßen,],
   )}
 
@@ -225,15 +227,15 @@
 
       #set table(stroke: none)
 
+      #let is-kleinunternehmer = seller.at("is-kleinunternehmer", default: false)
+      #let default-vat-rate = if is-kleinunternehmer { 0 } else { 20 }
+
       #table(
-        columns: (
-          auto, 
-          1fr, 
-          auto, 
-          auto, 
-          if not seller.is-kleinunternehmer { auto }, 
-          if not seller.is-kleinunternehmer { auto }, 
-          auto),
+        columns: if is-kleinunternehmer {
+            (auto, 1fr, auto, auto, auto)
+          } else {
+            (auto, 1fr, auto, auto, auto, auto, auto)
+          },
         align: (col, row) =>
             if row == 0 {
               (right,left,center,center,center,center,center).at(col)
@@ -242,31 +244,49 @@
               (right,left,right,right,right,right,right).at(col)
             },
         inset: 6pt,
-        table.header(
+        if is-kleinunternehmer { table.header(
           table.hline(stroke: 0.5pt),
           t.table-label.item-number,
           t.table-label.description,
           t.table-label.quantity,
           t.table-label.single-price,
-          if not seller.is-kleinunternehmer { t.table-label.vat-rate },
-          if not seller.is-kleinunternehmer { t.table-label.vat-price },
           t.table-label.total-price,
           table.hline(stroke: 0.5pt),
-        ),
+        )} else {table.header(
+          table.hline(stroke: 0.5pt),
+          t.table-label.item-number,
+          t.table-label.description,
+          t.table-label.quantity,
+          t.table-label.single-price,
+          t.table-label.vat-rate,
+          t.table-label.vat-price,
+          t.table-label.total-price,
+          table.hline(stroke: 0.5pt),
+        )},
         ..items
           .enumerate()
           .map(((index, row)) => {
-            let item-vat-rate = row.at("vat-rate", default: if not seller.is-kleinunternehmer {20} else {0})
+            let item-vat-rate = row.at("vat-rate", default: default-vat-rate)
 
-            (
-              index + 1,
-              row.description,
-              str(row.at("quantity", default: "1")),
-              format-currency(row.unit-price),
-              if not seller.is-kleinunternehmer { str(item-vat-rate) + "%" },
-              if not seller.is-kleinunternehmer { format-currency(row.at("quantity", default: 1) * (item-vat-rate / 100) * row.unit-price) },
-              format-currency((row.unit-price + (item-vat-rate / 100) * row.unit-price) * row.quantity),
-            )
+            if is-kleinunternehmer {
+              (
+                index + 1,
+                row.description,
+                str(row.at("quantity", default: "1")),
+                format-currency(row.unit-price),
+                format-currency((row.unit-price + (item-vat-rate / 100) * row.unit-price) * row.quantity),
+              )
+            } else {
+              (
+                index + 1,
+                row.description,
+                str(row.at("quantity", default: "1")),
+                format-currency(row.unit-price),
+                str(item-vat-rate) + "%",
+                format-currency(row.at("quantity", default: 1) * (item-vat-rate / 100) * row.unit-price),
+                format-currency((row.unit-price + (item-vat-rate / 100) * row.unit-price) * row.quantity),
+              )
+            }
           })
           .flatten()
           .map(str),
@@ -274,14 +294,14 @@
       )
 
       #let total-no-vat = items.map(row => row.unit-price * row.at("quantity", default: 1)).sum()
-      #let total-vat = items.map(row => row.unit-price * row.at("quantity", default: 1) * row.at("vat-rate", default: 20) / 100).sum()
+      #let total-vat = items.map(row => row.unit-price * row.at("quantity", default: 1) * row.at("vat-rate", default: default-vat-rate) / 100).sum()
       #let total-with-vat = total-no-vat + total-vat
 
       #align(right,
         table(
           columns: 2,
           t.total-no-vat, format-currency(total-no-vat),
-          ..if not seller.is-kleinunternehmer {
+          ..if not is-kleinunternehmer {
             (
               t.total-vat, format-currency(total-vat), table.hline(stroke: 0.5pt),
               t.total-with-vat, format-currency(total-with-vat),
@@ -298,7 +318,7 @@
 
       #t.delivery-date
 
-      #if seller.is-kleinunternehmer {
+      #if is-kleinunternehmer {
         t.kleinunternehmer-regelung
       }
 
@@ -307,13 +327,16 @@
       #t.at("request-payment")(total-with-vat)
 
       #box(inset: 10pt, radius: 2pt, stroke: 0.3pt, width: 100%, fill: cmyk(5%, 0%, 0%, 5%), [
-        #place(right, dx: -0.25cm,
-          box(inset: 4pt, fill: luma(95%), radius: 10pt, stroke: 1pt,
+        #place(right, dx: -0.25cm, dy: -0.1cm,
+          box(inset: 4pt, height: 2.8cm, fill: luma(95%), radius: 10pt, stroke: 1pt,
             tiaoma.qrcode(epc-qr-content, options: (
               scale: 1.1,
               bg-color: luma(95%),
               fg-color: luma(0%),
             ))))
+
+        #place(right, dx: -0.25cm, dy: 2.3cm,
+          box(inset: 4pt, fill: luma(95%), radius: 10pt, stroke: 0.5pt, [#set text(size: 8pt); #t.payment.pay-via-qr]))
 
         #grid(align: left,
           columns: 2,
