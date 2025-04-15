@@ -20,6 +20,7 @@
     full-name: none,
     short-name: none,
     address: none,
+    uid: none,
   ),
   header-left: none,
   header-right: none,
@@ -87,13 +88,15 @@
     #seller.name\
     #seller.address\
     #v(0.5em)
-    UID: #seller.uid
+    #if seller.at("uid") != none {[UID: #seller.uid]}
   ]
 
   place(top + left, dx: 0.5cm, dy: 4cm, [
     #set text(size: 14pt)
     #client.full-name\
-    #client.address
+    #client.address\
+    #v(0.5em)
+    #if client.at("uid") != none {[UID: #client.uid]}
   ])
 
   context {
@@ -130,10 +133,12 @@
 #let invoice(
   invoice-number: none,
   invoice-date: none,
+  delivery-date: none,
   seller: (
     name: none,
     address: none,
     uid: none,
+    is-kleinunternehmer: false,
     tel: none,
     email: none,
   ),
@@ -185,6 +190,8 @@
       amount: [Amount:],
       reference: [Reference:],
     ),
+    kleinunternehmer-regelung: [In accordance with § 6. Abs. 1 Z 27 (Kleinunternehmerregelung) relieved of VAT.],
+    delivery-date: if delivery-date == none { [The delivery date is, unless otherwise specified, equivalent to the invoice date.] } else { [The delivery date is, unless otherwise specified, on or in #delivery-date.] },
     closing: [Thank you for your business and with kind regards,],
   )} else if lang == "de" {(
     invoice: [Rechnung],
@@ -198,6 +205,8 @@
       amount: [Betrag:],
       reference: [Zahlungsreferenz:],
     ),
+    kleinunternehmer-regelung: [Gemäß § 6. Abs. 1 Z 27 (Kleinunternehmerregelung) von der USt. ausgenommen.],
+    delivery-date: if delivery-date == none { [Der Lieferzeitpunkt ist, falls nicht anders angegeben, das Rechnungsdatum.] } else { [Der Lieferzeitpunkt ist, falls nicht anders angegeben, am oder im #delivery-date.] },
     closing: [Mit vielem Dank für Ihr Vertrauen und freundlichen Grüßen,],
   )}
 
@@ -217,7 +226,14 @@
       #set table(stroke: none)
 
       #table(
-        columns: (auto, 1fr, auto, auto, auto, auto, auto),
+        columns: (
+          auto, 
+          1fr, 
+          auto, 
+          auto, 
+          if not seller.is-kleinunternehmer { auto }, 
+          if not seller.is-kleinunternehmer { auto }, 
+          auto),
         align: (col, row) =>
             if row == 0 {
               (right,left,center,center,center,center,center).at(col)
@@ -232,23 +248,23 @@
           t.table-label.description,
           t.table-label.quantity,
           t.table-label.single-price,
-          t.table-label.vat-rate,
-          t.table-label.vat-price,
+          if not seller.is-kleinunternehmer { t.table-label.vat-rate },
+          if not seller.is-kleinunternehmer { t.table-label.vat-price },
           t.table-label.total-price,
           table.hline(stroke: 0.5pt),
         ),
         ..items
           .enumerate()
           .map(((index, row)) => {
-            let item-vat-rate = row.at("vat-rate", default: 20)
+            let item-vat-rate = row.at("vat-rate", default: if not seller.is-kleinunternehmer {20} else {0})
 
             (
               index + 1,
               row.description,
               str(row.at("quantity", default: "1")),
               format-currency(row.unit-price),
-              str(item-vat-rate) + "%",
-              format-currency(row.at("quantity", default: 1) * (item-vat-rate / 100) * row.unit-price),
+              if not seller.is-kleinunternehmer { str(item-vat-rate) + "%" },
+              if not seller.is-kleinunternehmer { format-currency(row.at("quantity", default: 1) * (item-vat-rate / 100) * row.unit-price) },
               format-currency((row.unit-price + (item-vat-rate / 100) * row.unit-price) * row.quantity),
             )
           })
@@ -265,8 +281,12 @@
         table(
           columns: 2,
           t.total-no-vat, format-currency(total-no-vat),
-          t.total-vat, format-currency(total-vat), table.hline(stroke: 0.5pt),
-          t.total-with-vat, format-currency(total-with-vat),
+          ..if not seller.is-kleinunternehmer {
+            (
+              t.total-vat, format-currency(total-vat), table.hline(stroke: 0.5pt),
+              t.total-with-vat, format-currency(total-with-vat),
+            )
+          },
         )
       )
 
@@ -275,6 +295,12 @@
       )
 
       #after-table-text
+
+      #t.delivery-date
+
+      #if seller.is-kleinunternehmer {
+        t.kleinunternehmer-regelung
+      }
 
       #set text(number-type: "lining")
 
