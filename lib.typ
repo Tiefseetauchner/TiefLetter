@@ -11,6 +11,7 @@
     uid: none,
     tel: none,
     email: none,
+    kleinunternehmer: false,
   ),
   footer-middle: none,
   footer-right: none,
@@ -92,7 +93,7 @@
     #seller.name\
     #seller.address\
     #v(0.5em)
-    #if seller.uid != none { [UID: #seller.uid] }
+    #if seller.kleinunternehmer and seller.uid != none { [UID: #seller.uid] }
   ]
 
   place(top + left, dx: 0.5cm, dy: 4cm, [
