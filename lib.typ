@@ -435,6 +435,7 @@
   items: none,
   offer-text: none,
   pre-payment-amount: 20,
+  proforma-invoice: true,
   lang: "en",
 ) = {
   let format-currency(number) = {
@@ -466,9 +467,9 @@
       post-table: total => {
         [
           #if pre-payment-amount == none or pre-payment-amount == 0 {
-            [Upon acceptance of this offer, we will send you a proforma invoice.]
+            if proforma-invoice { [Upon acceptance of this offer, we will send you a proforma invoice.] } else { [] }
           } else {
-            [Upon acceptance of this offer, we will send you both an invoice for a prepayment of #pre-payment-amount % of the total amount (€ #format-currency(total * (pre-payment-amount / 100))) and a proforma invoice. The prepayment is to be made before the start of the project. The remaining amount is to be paid 14 days after delivery.]
+            [Upon acceptance of this offer, we will send you #if proforma-invoice { [both] } an invoice for a prepayment of #pre-payment-amount % of the total amount (€ #format-currency(total * (pre-payment-amount / 100))) #if proforma-invoice { [and a proforma invoice] }. The prepayment is to be made before the start of the project. The remaining amount is to be paid 14 days after delivery.]
           }
 
           #if offer-valid-until == none {
@@ -485,16 +486,18 @@
     )
   } else if lang == "de" {
     (
-      offer: [Rechnung],
-      offer-date: [Rechnungsdatum],
+      offer: [Angebot],
+      offer-date: [Angebotsdatum],
       pre-offer: [Hiermit übermitteln wir Ihnen unser Angebot Nr. #offer-number\.],
       pre-table: [Zudem nachfolgend die angebotenen Positionen, einzeln beauftragbar:],
       post-table: total => {
         [
           #if pre-payment-amount == none or pre-payment-amount == 0 {
-            [Mit Annahme dieses Angebots werden wir Ihnen eine Proformarechnung übermitteln.]
+            if proforma-invoice {
+              [Mit Annahme dieses Angebots werden wir Ihnen eine Proformarechnung übermitteln.]
+            } else { [] }
           } else {
-            [Mit Annahme dieses Angebots werden wir Ihnen sowohl eine Rechnung zur Vorauszahlung über #pre-payment-amount % des Gesamtbetrages (€ #format-currency(total * (pre-payment-amount / 100))) als auch eine Proformarechnung übermitteln. Die Vorauszahlung ist vor Beginn des Projektes zu leisten. Die Restzahlung ist binnen 14 Tagen nach Lieferung zu leisten.]
+            [Mit Annahme dieses Angebots werden wir Ihnen #if proforma-invoice { [sowohl] } eine Rechnung zur Vorauszahlung über #pre-payment-amount % des Gesamtbetrages (€ #format-currency(total * (pre-payment-amount / 100))) #if proforma-invoice { [als auch eine Proformarechnung ] }übermitteln. Die Vorauszahlung ist vor Beginn des Projektes zu leisten. Die Restzahlung ist binnen 14 Tagen nach Lieferung zu leisten.]
           }
 
           #if offer-valid-until == none {

@@ -1,4 +1,4 @@
-#import "@preview/tiefletter:0.1.1": invoice, offer
+#import "@preview/tiefletter:0.1.1": invoice
 
 #invoice(
   invoice-number: "2025-001",
@@ -12,7 +12,7 @@
   ),
   footer-middle: none,
   footer-right: [GISA Nr.: 12345678\
-Mitglied der WKÖ und WK Wien],
+    Mitglied der WKÖ und WK Wien],
   banner-image: image("header.svg"),
   iban: "AT92 1234 1412 1245 3928",
   bic: "XXXXXXXXXXX",
