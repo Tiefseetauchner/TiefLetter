@@ -2,6 +2,13 @@
 
 #set page(margin: 2cm)
 
+#let sign(name) = {
+  v(2em)
+  line(length: 15em, stroke: 0.5pt)
+  v(-0.4em)
+  [#name]
+}
+
 #let letter-preset(
   t,
   lang: "en",
@@ -12,6 +19,7 @@
     tel: none,
     email: none,
     is-kleinunternehmer: false,
+    signature: false,
   ),
   footer-middle: none,
   footer-right: none,
@@ -22,6 +30,7 @@
     short-name: none,
     address: none,
     uid: none,
+    signature: false,
   ),
   header-left: none,
   header-right: none,
@@ -142,8 +151,23 @@
 
     #content(t)
 
-    #t.closing\
-    #seller.name]
+    #t.closing]
+
+  box(width: 100%, grid(
+    columns: (1fr, 1fr),
+    gutter: 5em,
+    align: (col, row) => if col == 0 { left } else { right },
+    if seller.at("signature", default: false) {
+      v(1em)
+      [#sign(seller.name)]
+    } else {
+      [#seller.name]
+    },
+    if client.at("signature", default: false) {
+      v(1em)
+      [#sign(client.full-name)]
+    },
+  ))
 }
 
 #let invoice(
@@ -157,6 +181,7 @@
     is-kleinunternehmer: false,
     tel: none,
     email: none,
+    signature: false,
   ),
   footer-middle: none,
   footer-right: none,
@@ -166,6 +191,7 @@
     full-name: none,
     short-name: none,
     address: none,
+    signature: false,
   ),
   items: none,
   after-table-text: none,
@@ -430,6 +456,7 @@
     is-kleinunternehmer: none,
     tel: none,
     email: none,
+    signature: false,
   ),
   footer-middle: none,
   footer-right: none,
@@ -439,9 +466,11 @@
     full-name: none,
     short-name: none,
     address: none,
+    signature: false,
   ),
   items: none,
   offer-text: none,
+  after-table-text: none,
   pre-payment-amount: 20,
   proforma-invoice: true,
   lang: "en",
@@ -636,13 +665,13 @@
           },
         ))
 
+        #after-table-text
+
         #set text(number-type: "lining")
 
         #if is-kleinunternehmer {
           t.kleinunternehmer-regelung
         }
-
-
 
         #t.at("post-table")(total-with-vat)
       ]
