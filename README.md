@@ -15,7 +15,7 @@ TiefLetter. You will also need to include or install the Cormorant Garamond Font
 To import the package manually in your Typst project, use:
 
 ```typst
-#import "@preview/tiefletter:0.2.0": invoice, offer
+#import "@preview/tiefletter:0.2.1": invoice, offer
 ```
 
 Choose the appropriate document type here, or import letter preset for a simple
@@ -48,7 +48,7 @@ Then an optional text, some disclaimers like the Kleinunternehmerregelung as wel
 payment QR code.
 
 ```typst
-#import "@preview/tiefletter:0.2.0": invoice
+#import "@preview/tiefletter:0.2.1": invoice
 
 #invoice(
   invoice-number: "2025-001",
@@ -91,7 +91,7 @@ but can be set to a certain date.
 Closing statement and that's pretty much it.
 
 ```typst
-#import "@preview/tiefletter:0.2.0": offer
+#import "@preview/tiefletter:0.2.1": offer
 
 #offer(
   offer-number: "2025-004",
@@ -120,6 +120,12 @@ Closing statement and that's pretty much it.
   pre-payment-amount: 20,
 )
 ```
+
+### Usage notes on other document types
+
+The library builds on two internal functions: `letter-preset` and `document-preset`.
+One could conceivably use either of these to generate documents, however, it is not
+recommended as their interfaces may change.
 
 ## Configuration Options
 

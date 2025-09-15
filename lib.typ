@@ -9,6 +9,52 @@
   [#name]
 }
 
+#let document-preset(
+  footer-left: none,
+  footer-middle: none,
+  footer-right: none,
+  banner-image: none,
+  body: [],
+) = {
+  let has-footer = footer-left != none or footer-middle != none or footer-right != none
+
+  set page(
+    paper: "a4",
+    margin: (top: 2cm, right: 2cm, bottom: if has-footer { 2.5cm } else { 2cm }, left: 2cm),
+    footer-descent: -0.5cm,
+    footer: context {
+      set text(size: 9pt)
+      if has-footer {
+        box(width: 100%, inset: 10pt, grid(
+          align: center,
+          columns: 3,
+          if footer-left != none {
+            box(width: 1fr, align(center, footer-left))
+          },
+          grid.vline(stroke: 0.3pt),
+          if footer-middle != none {
+            box(width: 1fr, align(center, footer-middle))
+          },
+          grid.vline(stroke: 0.3pt),
+          if footer-right != none {
+            box(width: 1fr, align(center, footer-right))
+          },
+        ))
+      }
+    },
+  )
+
+  set text(font: "Cormorant Garamond", number-type: "lining", size: 12pt)
+
+  context {
+    box(width: page.width, place(top + left, dx: -here().position().x, dy: -here().position().y, [
+      #banner-image
+    ]))
+  }
+
+  [#body]
+}
+
 #let letter-preset(
   t,
   lang: "en",
@@ -78,96 +124,82 @@
     )
   }
 
-  set page(
-    paper: "a4",
-    margin: (top: 2cm, right: 2cm, bottom: 2.5cm, left: 2cm),
-    footer-descent: -0.5cm,
-    footer: context {
-      set text(size: 9pt)
-      box(width: 100%, inset: 10pt, grid(
-        align: center,
-        columns: 3,
-        box(width: 1fr, align(center, seller.name + "\n" + seller.tel + "\n" + seller.email)),
-        grid.vline(stroke: 0.3pt),
-        if footer-middle != none {
-          box(width: 1fr, align(center, footer-middle))
+  let footer-left = box(width: 1fr, align(center, seller.name + "\n" + seller.tel + "\n" + seller.email))
+
+  document-preset(
+    t,
+    lang: lang,
+    footer-left: footer-left,
+    footer-middle: footer-middle,
+    footer-right: footer-right,
+    banner-image: banner-image,
+    content: t => {
+      place(top + right, dx: -0.5cm, dy: 1cm)[
+        #set text(size: 14pt)
+        #seller.name\
+        #seller.address\
+        #v(0.5em)
+        #if seller.at("is-kleinunternehmer", default: false) and seller.at("uid", default: none) != none {
+          [UID: #seller.uid]
+        }
+      ]
+
+      place(top + left, dx: 0.5cm, dy: 4cm, [
+        #set text(size: 14pt)
+        #client.full-name\
+        #client.address\
+        #v(0.5em)
+        #if client.at("uid", default: none) != none { [UID: #client.uid] }
+      ])
+
+      v(7cm)
+
+      place(left, dx: 1.2cm, dy: -1.4em, header-left)
+      place(right, dx: -1.2cm, dy: -1.4em, header-right)
+
+      line(start: (1cm, 0cm), length: 100% - 2cm)
+
+      assert(
+        client.gender-marker in ("f", "F", "m", "M", "o", "O"),
+        message: "Gender Marker not recognized. Use only \"[fFmMoO]\"",
+      )
+
+      let salutation = if client.gender-marker == "f" or client.gender-marker == "F" {
+        t.salutation-f
+      } else if client.gender-marker == "m" or client.gender-marker == "M" {
+        t.salutation-m
+      } else if client.gender-marker == "o" or client.gender-marker == "O" {
+        t.salutation-o
+      }
+
+      set text(number-type: "old-style")
+
+      [#salutation #client.short-name,
+
+        #content(t)
+
+        #t.closing]
+
+      box(width: 100%, grid(
+        columns: (1fr, 1fr),
+        gutter: 5em,
+        align: (col, row) => if col == 0 { left } else { right },
+        if seller.at("signature", default: false) {
+          v(1em)
+          [#sign(seller.name)]
+        } else {
+          [#seller.name]
         },
-        grid.vline(stroke: 0.3pt),
-        if footer-right != none {
-          box(width: 1fr, align(center, footer-right))
+        if client.at("signature", default: false) {
+          v(1em)
+          [#sign(client.full-name)]
         },
       ))
+      [
+        #content(t)
+      ]
     },
   )
-
-  set text(font: "Cormorant Garamond", number-type: "lining", size: 12pt)
-
-  place(top + right, dx: -0.5cm, dy: 1cm)[
-    #set text(size: 14pt)
-    #seller.name\
-    #seller.address\
-    #v(0.5em)
-    #if seller.at("is-kleinunternehmer", default: false) and seller.at("uid", default: none) != none {
-      [UID: #seller.uid]
-    }
-  ]
-
-  place(top + left, dx: 0.5cm, dy: 4cm, [
-    #set text(size: 14pt)
-    #client.full-name\
-    #client.address\
-    #v(0.5em)
-    #if client.at("uid", default: none) != none { [UID: #client.uid] }
-  ])
-
-  context {
-    box(width: page.width, place(top + left, dx: -here().position().x, dy: -here().position().y, [
-      #banner-image
-    ]))
-  }
-  v(7cm)
-
-  place(left, dx: 1.2cm, dy: -1.4em, header-left)
-  place(right, dx: -1.2cm, dy: -1.4em, header-right)
-
-  line(start: (1cm, 0cm), length: 100% - 2cm)
-
-  assert(
-    client.gender-marker in ("f", "F", "m", "M", "o", "O"),
-    message: "Gender Marker not recognized. Use only \"[fFmMoO]\"",
-  )
-
-  let salutation = if client.gender-marker == "f" or client.gender-marker == "F" {
-    t.salutation-f
-  } else if client.gender-marker == "m" or client.gender-marker == "M" {
-    t.salutation-m
-  } else if client.gender-marker == "o" or client.gender-marker == "O" {
-    t.salutation-o
-  }
-
-  set text(number-type: "old-style")
-
-  [#salutation #client.short-name,
-
-    #content(t)
-
-    #t.closing]
-
-  box(width: 100%, grid(
-    columns: (1fr, 1fr),
-    gutter: 5em,
-    align: (col, row) => if col == 0 { left } else { right },
-    if seller.at("signature", default: false) {
-      v(1em)
-      [#sign(seller.name)]
-    } else {
-      [#seller.name]
-    },
-    if client.at("signature", default: false) {
-      v(1em)
-      [#sign(client.full-name)]
-    },
-  ))
 }
 
 #let invoice(
