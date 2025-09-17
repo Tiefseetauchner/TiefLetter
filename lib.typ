@@ -20,8 +20,8 @@
 
   set page(
     paper: "a4",
-    margin: (top: 2cm, right: 2cm, bottom: if has-footer { 2.5cm } else { 2cm }, left: 2cm),
-    footer-descent: -0.5cm,
+    margin: (top: 2cm, right: 2cm, bottom: if has-footer { 3.5cm } else { 2cm }, left: 2cm),
+    footer-descent: 0.5cm,
     footer: context {
       set text(size: 9pt)
       if has-footer {
@@ -127,13 +127,11 @@
   let footer-left = box(width: 1fr, align(center, seller.name + "\n" + seller.tel + "\n" + seller.email))
 
   document-preset(
-    t,
-    lang: lang,
     footer-left: footer-left,
     footer-middle: footer-middle,
     footer-right: footer-right,
     banner-image: banner-image,
-    content: t => {
+    body: context {
       place(top + right, dx: -0.5cm, dy: 1cm)[
         #set text(size: 14pt)
         #seller.name\

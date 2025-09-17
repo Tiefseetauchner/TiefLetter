@@ -7,29 +7,36 @@ if [ "$#" -ne 1 ]; then
 fi
 
 SRC_DIR="$(dirname "$0")"
-DEST_DIR="$SRC_DIR/../packages/packages/preview/tiefletter/$1"
+VERSION="$1"
 
-mkdir -p "$DEST_DIR"
+copyPackage() {
+    DEST_DIR="$1/$VERSION"
 
-REQUIRED_FILES=(
-    "typst.toml"
-    "README.md"
-    "LICENSE"
-    "lib.typ"
-    "thumbnail.png"
-    "template"
-)
+    mkdir -p "$DEST_DIR"
 
-for item in "${REQUIRED_FILES[@]}"; do
-    if [ -e "$SRC_DIR/$item" ]; then
-        cp -r "$SRC_DIR/$item" "$DEST_DIR/"
-    else
-        echo "Warning: $item not found in $SRC_DIR"
+    REQUIRED_FILES=(
+        "typst.toml"
+        "README.md"
+        "LICENSE"
+        "lib.typ"
+        "thumbnail.png"
+        "template"
+    )
+
+    for item in "${REQUIRED_FILES[@]}"; do
+        if [ -e "$SRC_DIR/$item" ]; then
+            cp -r "$SRC_DIR/$item" "$DEST_DIR/"
+        else
+            echo "Warning: $item not found in $SRC_DIR"
+        fi
+    done
+
+    if [ -f "$DEST_DIR/README.md" ]; then
+        sed -i '/!\[.*\](.*)/d' "$DEST_DIR/README.md"
     fi
-done
+    
+    echo "Files copied to $DEST_DIR"
+}
 
-if [ -f "$DEST_DIR/README.md" ]; then
-    sed -i '/!\[.*\](.*)/d' "$DEST_DIR/README.md"
-fi
-
-echo "Files copied to $DEST_DIR"
+copyPackage "$SRC_DIR/../packages/packages/preview/tiefletter"
+copyPackage "../../../.cache/typst/packages/preview/tiefletter"
