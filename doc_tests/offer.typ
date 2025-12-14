@@ -1,4 +1,4 @@
-#import "meta.teco.typ": test-languages, select-test-language
+#import "meta.teco.typ": select-test-language, test-languages
 #import "../lib.typ": offer
 
 #for (idx, lang) in test-languages.enumerate() {
@@ -36,7 +36,6 @@
     after-table-text: [Alle Preise verstehen sich zuzüglich USt., sofern nicht anders angegeben.],
     pre-payment-amount: 30,
     proforma-invoice: true,
-    lang: lang,
   )
 
   if idx + 1 < test-languages.len() { pagebreak() }

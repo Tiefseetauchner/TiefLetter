@@ -20,7 +20,9 @@ copyPackage() {
         "LICENSE"
         "lib.typ"
         "thumbnail.png"
-        "template"
+        "template/"
+        "classes/"
+        "core/"
     )
 
     for item in "${REQUIRED_FILES[@]}"; do

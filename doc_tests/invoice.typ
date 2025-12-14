@@ -1,4 +1,4 @@
-#import "meta.teco.typ": test-languages, select-test-language
+#import "meta.teco.typ": select-test-language, test-languages
 #import "../lib.typ": invoice
 
 #for (idx, lang) in test-languages.enumerate() {
@@ -35,7 +35,6 @@
     payment-due-date: "2024-05-18",
     iban: "AT021200012345678901",
     bic: "TESTATW1",
-    lang: lang,
   )
 
   if idx + 1 < test-languages.len() { pagebreak() }

@@ -1,4 +1,4 @@
-#import "meta.teco.typ": test-languages, select-test-language
+#import "meta.teco.typ": select-test-language, test-languages
 #import "../lib.typ": letter-preset
 
 #let translations = (
@@ -9,7 +9,6 @@
   select-test-language(lang)
   letter-preset(
     translations,
-    lang: lang,
     seller: (
       name: "Tiefseetauchner",
       address: "Schottenring 12\n1010 Wien",
