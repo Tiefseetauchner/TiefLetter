@@ -137,7 +137,7 @@ shared between template types.
 Shared between the templates are the following parameters:
 
 ```typst
-  lang: "en", // "en" or "de" are currently supported
+  lang: none, // Supported: "en-at", "en-de", "en-us", "de-at", "de-de"
   seller: (
     name: none,
     address: none,
@@ -192,6 +192,23 @@ Offer takes the following additional arguments:
   offer-text: none, // The elaboration on the offer, a free text input. Look at example for details
   items: none, // Shown in a table, has to be a dictionary as shown in the example
   pre-payment-amount: 20, // A percentage of prepayment to be made. Otherwise, only a proforma invoice will be offered.
+```
+
+## Internationalization
+
+- Language codes: `en-at` (default), `en-de`, `en-us`, `de-at`, `de-de`.
+- The language is selected per document via the `lang` argument shown above.
+- Kleinunternehmer text reflects the locale: `§ 6 Abs. 1 Z 27 UStG` for Austria, `§ 19 UStG` for Germany.
+
+## Testing
+
+Doc tests live in `doc_tests/` and are rendered for each configured language. The test runner auto-generates `doc_tests/meta.teco.typ` listing the languages to iterate over.
+
+```bash
+./run_tests.sh           # render all doc tests for en-at, de-at, de-de
+./run_tests.sh --check   # faster dry run, no PDF kept
+./run_tests.sh --langs "en-de,de-de"  # limit languages
+./run_tests.sh --filter invoice       # run only invoice test
 ```
 
 ## License and Contributions

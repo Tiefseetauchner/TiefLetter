@@ -2,6 +2,16 @@
 #import "../core/utils.typ": format-currency
 #import "../core/i18n.typ": offer-translations
 
+/// Offer template: letter layout with free-text offer body, item table,
+/// optional pre-payment and proforma-invoice wording, and locale-aware clauses.
+/// Parameters:
+/// - offer-number/offer-date/offer-valid-until
+/// - seller/client: contact dictionaries; seller.is-kleinunternehmer toggles VAT columns
+/// - items: sequence of rows with description, quantity, unit-price, optional vat-rate
+/// - offer-text/after-table-text: optional text blocks around the table
+/// - pre-payment-amount (percent) and proforma-invoice (bool)
+/// - footer-middle/footer-right/banner-image: optional visuals
+/// - lang: locale code (en-at, en-de, en-us, de-at, de-de)
 #let offer(
   offer-number: none,
   offer-date: none,
@@ -30,7 +40,7 @@
   after-table-text: none,
   pre-payment-amount: 20,
   proforma-invoice: true,
-  lang: "en",
+  lang: none,
 ) = {
   let t = offer-translations(
     language: lang,

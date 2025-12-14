@@ -1,3 +1,8 @@
+/// Base document preset with optional banner and three-part footer.
+/// Parameters:
+/// - footer-left/footer-middle/footer-right: content blocks or none
+/// - banner-image: optional element placed at top
+/// - body: content to render in the document
 #let document-preset(
   footer-left: none,
   footer-middle: none,
@@ -43,4 +48,3 @@
 
   [#body]
 }
-

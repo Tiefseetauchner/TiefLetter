@@ -3,6 +3,16 @@
 #import "../core/utils.typ": format-currency
 #import "../core/i18n.typ": invoice-translations
 
+/// Invoice template: letter layout with item table, totals, EPC QR payment block,
+/// delivery date notice, and Kleinunternehmer handling per locale.
+/// Parameters:
+/// - invoice-number/invoice-date/delivery-date
+/// - seller/client: contact dictionaries; seller.is-kleinunternehmer toggles VAT columns
+/// - items: sequence of rows with description, quantity, unit-price, optional vat-rate
+/// - after-table-text: optional text block after table
+/// - payment-due-date, iban, bic
+/// - footer-middle/footer-right/banner-image: optional visuals
+/// - lang: locale code (en-at, en-de, en-us, de-at, de-de)
 #let invoice(
   invoice-number: none,
   invoice-date: none,
@@ -31,7 +41,7 @@
   payment-due-date: none,
   iban: none,
   bic: none,
-  lang: "en",
+  lang: none,
 ) = {
   let t = invoice-translations(
     language: lang,

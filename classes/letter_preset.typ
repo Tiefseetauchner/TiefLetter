@@ -2,9 +2,18 @@
 #import "../core/sign.typ": sign
 #import "../core/i18n.typ": letter-translations
 
+/// Letter preset for typed correspondence; builds on document-preset and
+/// injects headers, salutations, signature handling, and footer composition.
+/// Parameters:
+/// - t: translation dictionary (automatically merged with locale strings)
+/// - lang: locale code (en-at, en-de, en-us, de-at, de-de)
+/// - seller/client: contact dictionaries; seller.signature/client.signature enable signature lines
+/// - footer-middle/footer-right/banner-image: optional display elements
+/// - header-left/header-right: header content blocks
+/// - content: function(t) -> body content for the letter
 #let letter-preset(
   t,
-  lang: "en",
+  lang: none,
   seller: (
     name: none,
     address: none,
