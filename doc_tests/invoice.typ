@@ -1,10 +1,10 @@
-#import "meta.teco.typ": select-test-language, test-languages
-#import "../lib.typ": invoice
+#import "meta.teco.typ": test-languages
+#import "../lib.typ": invoice, select-language
 
 #for (idx, lang) in test-languages.enumerate() {
-  select-test-language(lang)
+  select-language(lang)
   invoice(
-    invoice-number: "2024-0001",
+    invoice-number: lang,
     invoice-date: "2024-05-04",
     delivery-date: "2024-05-02",
     seller: (

@@ -1,10 +1,11 @@
-#import "meta.teco.typ": select-test-language, test-languages
+#import "meta.teco.typ": test-languages
 #import "../lib.typ": offer
+#import "../core/i18n.typ": select-language
 
 #for (idx, lang) in test-languages.enumerate() {
-  select-test-language(lang)
+  select-language(lang)
   offer(
-    offer-number: "2024-0004",
+    offer-number: lang,
     offer-date: "2024-05-04",
     offer-valid-until: "2024-05-20",
     seller: (

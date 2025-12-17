@@ -1,8 +1,8 @@
-#import "meta.teco.typ": test-languages, select-test-language
-#import "../lib.typ": document-preset
+#import "meta.teco.typ": test-languages
+#import "../lib.typ": document-preset, select-language
 
 #for (idx, lang) in test-languages.enumerate() {
-  select-test-language(lang)
+  select-language(lang)
   document-preset(
     banner-image: image("../template/header.svg"),
     footer-left: [Footer left 1\
