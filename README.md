@@ -1,5 +1,7 @@
 # TiefLetter
 
+![Cover image for TiefLetter](cover.png)
+
 TiefLetter is a collection of templates that can conceivably enable someone to create a matching set of documents using Typst.
 
 These templates provide a clear entry point into creating invoices, offers, contracts, and more, even using automated systems.
