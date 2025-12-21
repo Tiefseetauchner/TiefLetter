@@ -11,7 +11,7 @@ To use TiefLetter with the Typst web app, choose "Start from template" and selec
 To import the package manually in your Typst project, use:
 
 ```typst
-#import "@preview/TiefLetter:0.2.0": invoice
+#import "@preview/tiefletter:0.2.0": invoice
 ```
 
 ### Setup
