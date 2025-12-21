@@ -44,4 +44,3 @@ TiefLetter uses a language selection system lovingly dubbed "TiefLang" (though t
 To set a language, call the `select-language` method with either a language code or an element of the `languages` dictionary.
 
 This also selects which laws and currency format will be used for your document.
-

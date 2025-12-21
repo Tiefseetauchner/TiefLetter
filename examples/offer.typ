@@ -2,10 +2,10 @@
 
 #tiefletter.select-language(tiefletter.languages.deutsch-at)
 
-#tiefletter.invoice(
-  invoice-number: "2024-023",
-  invoice-date: "2024-05-04",
-  delivery-date: "2024-05-02",
+#tiefletter.offer(
+  offer-number: "2024-023",
+  offer-date: "2024-05-04",
+  offer-valid-until: "2024-05-20",
   seller: (
     name: "Tiefseetauchner",
     address: "Schottenring 12\n1010 Wien",
@@ -19,19 +19,20 @@
   footer-right: [Bank: Beispielbank],
   banner-image: image("header.svg"),
   client: (
-    gender-marker: "o",
-    full-name: "Muster GmbH",
-    short-name: "Muster GmbH",
-    address: "Examplegasse 5\n1020 Wien",
+    gender-marker: "f",
+    full-name: "Beispiel Kundin",
+    short-name: "Maria Musterfrau",
+    address: "Beispielstraße 11\n1020 Wien",
     signature: false,
   ),
   items: (
-    (quantity: 2, description: "Design Sprint", unit-price: 400.0),
-    (quantity: 1, description: "Implementation Package", unit-price: 300.0, vat-rate: 10),
-    (quantity: 3, description: "Support Hour", unit-price: 75.0),
+    (quantity: 1, description: "Brand Workshop", unit-price: 500.0, vat-rate: 20),
+    (quantity: 2, description: "UX Review Session", unit-price: 150.0, vat-rate: 10),
   ),
-  after-table-text: [Delivery within 7 days after payment receipt.],
-  payment-due-date: "2024-05-18",
-  iban: "AT021200012345678901",
-  bic: "TESTATW1",
+  offer-text: [Wir schlagen ein kurzes Kickoff, Workshops zur Zieldefinition sowie einen UX-Review vor, basierend auf dem aktuellen Produktstand.
+
+    Die Umsetzung kann modular beauftragt werden, je nach Bedarf.],
+  after-table-text: [Alle Preise verstehen sich zuzüglich USt., sofern nicht anders angegeben.],
+  pre-payment-amount: 30,
+  proforma-invoice: true,
 )
