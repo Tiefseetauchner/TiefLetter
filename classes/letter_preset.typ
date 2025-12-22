@@ -1,6 +1,8 @@
+#import "@preview/tieflang:0.1.0": tr
 #import "document_preset.typ": document-preset
+#import "../core/i18n.typ": setup-i18n
 #import "../core/utils.typ": sign
-#import "../core/i18n.typ": i18n
+
 
 #let letter-preset(
   sender: (
@@ -26,11 +28,12 @@
   ),
   header-left: none,
   header-right: none,
+  custom-salutation: none,
   body,
 ) = {
-  context {
-    let t = i18n()
+  setup-i18n()
 
+  context {
     show: document-preset.with(
       footer-left: footer-left,
       footer-middle: footer-middle,
@@ -70,14 +73,6 @@
       addressee.gender-marker in ("f", "F", "m", "M", "o", "O"),
       message: "Gender Marker not recognized. Use only \"[fFmMoO]\"",
     )
-
-    let salutation = if addressee.gender-marker == "f" or addressee.gender-marker == "F" {
-      t.letter.salutation-f
-    } else if addressee.gender-marker == "m" or addressee.gender-marker == "M" {
-      t.letter.salutation-m
-    } else if addressee.gender-marker == "o" or addressee.gender-marker == "O" {
-      t.letter.salutation-o
-    }
 
     set text(number-type: prev-num-type)
 

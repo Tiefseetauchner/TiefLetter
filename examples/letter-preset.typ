@@ -1,4 +1,4 @@
-#import "@preview/tiefletter:0.2.0"
+#import "@preview/tiefletter:0.2.1"
 
 #tiefletter.select-language(tiefletter.languages.deutsch-at)
 

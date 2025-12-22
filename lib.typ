@@ -2,4 +2,5 @@
 #import "classes/invoice.typ": invoice
 #import "classes/letter_preset.typ": letter-preset
 #import "classes/offer.typ": offer
-#import "core/i18n.typ": languages, select-language
+#import "core/i18n.typ": languages
+#import "@preview/tieflang:0.1.0": select-language

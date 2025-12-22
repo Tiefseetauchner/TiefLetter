@@ -1,7 +1,8 @@
 #import "@preview/tiaoma:0.3.0"
+#import "@preview/tieflang:0.1.0": tr
 #import "letter_preset.typ": letter-preset
 #import "../core/utils.typ": format-currency, resolve-currency, sign
-#import "../core/i18n.typ": i18n
+#import "../core/i18n.typ": setup-i18n
 
 #let invoice(
   invoice-number: none,
@@ -36,9 +37,12 @@
     currency-comma-separator: none,
     currency-symbol: none,
   ),
+  custom-salutation: none,
 ) = {
+  setup-i18n()
+
   context {
-    let currency-resolved = resolve-currency(currency, i18n())
+    let currency-resolved = resolve-currency(currency, tr().currency)
 
     show: letter-preset.with(
       sender: seller,
@@ -47,12 +51,24 @@
       footer-right: footer-right,
       banner-image: banner-image,
       addressee: client,
-      header-left: [#i18n().invoice.invoice #invoice-number],
-      header-right: [#i18n().invoice.invoice-date: #invoice-date],
+      header-left: [#tr().invoice.invoice #invoice-number],
+      header-right: [#tr().invoice.invoice-date: #invoice-date],
     )
 
+    let salutation = if custom-salutation != none {
+      custom-salutation
+    } else if client.gender-marker == "f" or client.gender-marker == "F" {
+      tr().letter.salutation-f
+    } else if client.gender-marker == "m" or client.gender-marker == "M" {
+      tr().letter.salutation-m
+    } else if client.gender-marker == "o" or client.gender-marker == "O" {
+      tr().letter.salutation-o
+    }
+
     [
-      #(i18n().invoice.pre-table)(invoice-number)
+      #salutation #client.short-name,
+
+      #(tr().invoice.pre-table)(invoice-number)
 
       #set table(stroke: none)
 
@@ -74,23 +90,23 @@
         if is-kleinunternehmer {
           table.header(
             table.hline(stroke: 0.5pt),
-            i18n().table-base.table-label.item-number,
-            i18n().table-base.table-label.description,
-            i18n().table-base.table-label.quantity,
-            i18n().table-base.table-label.single-price,
-            i18n().table-base.table-label.total-price,
+            tr().table-base.table-label.item-number,
+            tr().table-base.table-label.description,
+            tr().table-base.table-label.quantity,
+            tr().table-base.table-label.single-price,
+            tr().table-base.table-label.total-price,
             table.hline(stroke: 0.5pt),
           )
         } else {
           table.header(
             table.hline(stroke: 0.5pt),
-            i18n().table-base.table-label.item-number,
-            i18n().table-base.table-label.description,
-            i18n().table-base.table-label.quantity,
-            i18n().table-base.table-label.single-price,
-            i18n().table-base.table-label.vat-rate,
-            i18n().table-base.table-label.vat-price,
-            i18n().table-base.table-label.total-price,
+            tr().table-base.table-label.item-number,
+            tr().table-base.table-label.description,
+            tr().table-base.table-label.quantity,
+            tr().table-base.table-label.single-price,
+            tr().table-base.table-label.vat-rate,
+            tr().table-base.table-label.vat-price,
+            tr().table-base.table-label.total-price,
             table.hline(stroke: 0.5pt),
           )
         },
@@ -106,15 +122,15 @@
                 str(row.at("quantity", default: "1")),
                 format-currency(
                   row.unit-price,
-                  i18n().currency.currency-thousands-separator,
-                  i18n().currency.currency-comma-separator,
-                  i18n().currency.currency-symbol,
+                  tr().currency.currency-thousands-separator,
+                  tr().currency.currency-comma-separator,
+                  tr().currency.currency-symbol,
                 ),
                 format-currency(
                   (row.unit-price + (item-vat-rate / 100) * row.unit-price) * row.quantity,
-                  i18n().currency.currency-thousands-separator,
-                  i18n().currency.currency-comma-separator,
-                  i18n().currency.currency-symbol,
+                  tr().currency.currency-thousands-separator,
+                  tr().currency.currency-comma-separator,
+                  tr().currency.currency-symbol,
                 ),
               )
             } else {
@@ -124,22 +140,22 @@
                 str(row.at("quantity", default: "1")),
                 format-currency(
                   row.unit-price,
-                  i18n().currency.currency-thousands-separator,
-                  i18n().currency.currency-comma-separator,
-                  i18n().currency.currency-symbol,
+                  tr().currency.currency-thousands-separator,
+                  tr().currency.currency-comma-separator,
+                  tr().currency.currency-symbol,
                 ),
                 str(item-vat-rate) + "%",
                 format-currency(
                   row.at("quantity", default: 1) * (item-vat-rate / 100) * row.unit-price,
-                  i18n().currency.currency-thousands-separator,
-                  i18n().currency.currency-comma-separator,
-                  i18n().currency.currency-symbol,
+                  tr().currency.currency-thousands-separator,
+                  tr().currency.currency-comma-separator,
+                  tr().currency.currency-symbol,
                 ),
                 format-currency(
                   (row.unit-price + (item-vat-rate / 100) * row.unit-price) * row.quantity,
-                  i18n().currency.currency-thousands-separator,
-                  i18n().currency.currency-comma-separator,
-                  i18n().currency.currency-symbol,
+                  tr().currency.currency-thousands-separator,
+                  tr().currency.currency-comma-separator,
+                  tr().currency.currency-symbol,
                 ),
               )
             }
@@ -161,29 +177,29 @@
 
       #align(right, table(
         columns: 2,
-        i18n().table-base.total-no-vat,
+        tr().table-base.total-no-vat,
         format-currency(
           total-no-vat,
-          i18n().currency.currency-thousands-separator,
-          i18n().currency.currency-comma-separator,
-          i18n().currency.currency-symbol,
+          tr().currency.currency-thousands-separator,
+          tr().currency.currency-comma-separator,
+          tr().currency.currency-symbol,
         ),
         ..if not is-kleinunternehmer {
           (
-            i18n().table-base.total-vat,
+            tr().table-base.total-vat,
             format-currency(
               total-vat,
-              i18n().currency.currency-thousands-separator,
-              i18n().currency.currency-comma-separator,
-              i18n().currency.currency-symbol,
+              tr().currency.currency-thousands-separator,
+              tr().currency.currency-comma-separator,
+              tr().currency.currency-symbol,
             ),
             table.hline(stroke: 0.5pt),
-            i18n().table-base.total-with-vat,
+            tr().table-base.total-with-vat,
             format-currency(
               total-with-vat,
-              i18n().currency.currency-thousands-separator,
-              i18n().currency.currency-comma-separator,
-              i18n().currency.currency-symbol,
+              tr().currency.currency-thousands-separator,
+              tr().currency.currency-comma-separator,
+              tr().currency.currency-symbol,
             ),
           )
         },
@@ -212,15 +228,15 @@
 
       #after-table-text
 
-      #(i18n().invoice.delivery-date)(delivery-date)
+      #(tr().invoice.delivery-date)(delivery-date)
 
       #if is-kleinunternehmer {
-        i18n().kleinunternehmer-regelung
+        tr().kleinunternehmer-regelung
       }
 
       #set text(number-type: "lining")
 
-      #(i18n().invoice.request-payment)(total-with-vat, payment-due-date, invoice-number, n => format-currency(
+      #(tr().invoice.request-payment)(total-with-vat, payment-due-date, invoice-number, n => format-currency(
         n,
         currency-resolved.currency-thousands-separator,
         currency-resolved.currency-comma-separator,
@@ -246,17 +262,17 @@
           fill: luma(95%),
           radius: 10pt,
           stroke: 0.5pt,
-          [#set text(size: 8pt); #i18n().invoice.payment.pay-via-qr],
+          [#set text(size: 8pt); #tr().invoice.payment.pay-via-qr],
         ))
 
         #grid(
           align: left,
           columns: 2,
           gutter: 9pt,
-          i18n().invoice.payment.recipient, seller.name,
-          i18n().invoice.payment.iban, iban,
-          i18n().invoice.payment.bic, bic,
-          i18n().invoice.payment.amount,
+          tr().invoice.payment.recipient, seller.name,
+          tr().invoice.payment.iban, iban,
+          tr().invoice.payment.bic, bic,
+          tr().invoice.payment.amount,
           format-currency(
             total-with-vat,
             currency-resolved.currency-thousands-separator,
@@ -264,11 +280,11 @@
             currency-resolved.currency-symbol,
           ),
 
-          i18n().invoice.payment.reference, invoice-number,
+          tr().invoice.payment.reference, invoice-number,
         )
       ])
 
-      #i18n().invoice.closing
+      #tr().invoice.closing
 
       #box(
         width: 100%,

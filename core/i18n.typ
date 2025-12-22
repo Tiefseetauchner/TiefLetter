@@ -1,4 +1,5 @@
 #import "utils.typ": format-currency
+#import "@preview/tieflang:0.1.0": configure-translations
 
 #let languages = (
   english-at: "en-at",
@@ -7,29 +8,6 @@
   deutsch-at: "de-at",
   deutsch-de: "de-de",
 )
-
-#let selected-language = state("language-state", languages.english-us)
-
-#let normalize-lang(language) = {
-  if language in ("en", "en-at") {
-    "en-at"
-  } else if language in "en-de" {
-    "en-de"
-  } else if language in "en-us" {
-    "en-us"
-  } else if language in ("de", "de-at") {
-    "de-at"
-  } else if language in "de-de" {
-    "de-de"
-  } else {
-    language
-  }
-}
-
-/// Selects a language to use in the document. Select from `languages`.
-#let select-language(language) = {
-  selected-language.update(normalize-lang(language))
-}
 
 #let currency-format-at = (
   currency-thousands-separator: ",",
@@ -262,20 +240,15 @@
   currency: currency-format-de,
 )
 
-#let i18n-table = (
-  "en-at": i18n-en-at,
-  "en-de": i18n-en-de,
-  "en-us": i18n-en-us,
-  "de-at": i18n-de-at,
-  "de-de": i18n-de-de,
+#let setup-i18n = () => configure-translations(
+  (
+    en-at: i18n-en-at,
+    en-de: i18n-en-de,
+    en-us: i18n-en-us,
+    de-at: i18n-de-at,
+    de-de: i18n-de-de,
+  ),
+  strict: true,
+  default: "de-at",
 )
 
-#let i18n() = {
-  let entry = i18n-table.at(selected-language.get(), default: none)
-
-  if entry == none {
-    assert(false, message: "Selected language '" + resolved + "' is not available yet.")
-  }
-
-  entry
-}

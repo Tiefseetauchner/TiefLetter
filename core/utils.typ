@@ -72,23 +72,23 @@
 /// Has to be called in context
 #let resolve-currency(
   currency,
-  i18n,
+  i18n-currency,
 ) = {
   (
     currency-comma-separator: if currency.currency-comma-separator != none {
       currency.currency-comma-separator
     } else {
-      i18n.currency.currency-comma-separator
+      i18n-currency.currency-comma-separator
     },
     currency-thousands-separator: if currency.currency-thousands-separator != none {
       currency.currency-thousands-separator
     } else {
-      i18n.currency.currency-thousands-separator
+      i18n-currency.currency-thousands-separator
     },
     currency-symbol: if currency.currency-symbol != none {
       currency.currency-symbol
     } else {
-      i18n.currency.currency-symbol
+      i18n-currency.currency-symbol
     },
   )
 }
