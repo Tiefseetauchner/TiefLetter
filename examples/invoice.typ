@@ -30,7 +30,6 @@
     (quantity: 1, description: "Implementation Package", unit-price: 300.0, vat-rate: 10),
     (quantity: 3, description: "Support Hour", unit-price: 75.0),
   ),
-  after-table-text: [Delivery within 7 days after payment receipt.],
   payment-due-date: "2024-05-18",
   iban: "AT021200012345678901",
   bic: "TESTATW1",
