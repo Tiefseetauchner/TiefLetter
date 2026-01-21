@@ -122,15 +122,15 @@
                 str(row.at("quantity", default: "1")),
                 format-currency(
                   row.unit-price,
-                  tr().currency.currency-thousands-separator,
-                  tr().currency.currency-comma-separator,
-                  tr().currency.currency-symbol,
+                  currency-resolved.currency-thousands-separator,
+                  currency-resolved.currency-comma-separator,
+                  currency-resolved.currency-symbol,
                 ),
                 format-currency(
                   (row.unit-price + (item-vat-rate / 100) * row.unit-price) * row.quantity,
-                  tr().currency.currency-thousands-separator,
-                  tr().currency.currency-comma-separator,
-                  tr().currency.currency-symbol,
+                  currency-resolved.currency-thousands-separator,
+                  currency-resolved.currency-comma-separator,
+                  currency-resolved.currency-symbol,
                 ),
               )
             } else {
@@ -140,22 +140,22 @@
                 str(row.at("quantity", default: "1")),
                 format-currency(
                   row.unit-price,
-                  tr().currency.currency-thousands-separator,
-                  tr().currency.currency-comma-separator,
-                  tr().currency.currency-symbol,
+                  currency-resolved.currency-thousands-separator,
+                  currency-resolved.currency-comma-separator,
+                  currency-resolved.currency-symbol,
                 ),
                 str(item-vat-rate) + "%",
                 format-currency(
                   row.at("quantity", default: 1) * (item-vat-rate / 100) * row.unit-price,
-                  tr().currency.currency-thousands-separator,
-                  tr().currency.currency-comma-separator,
-                  tr().currency.currency-symbol,
+                  currency-resolved.currency-thousands-separator,
+                  currency-resolved.currency-comma-separator,
+                  currency-resolved.currency-symbol,
                 ),
                 format-currency(
                   (row.unit-price + (item-vat-rate / 100) * row.unit-price) * row.quantity,
-                  tr().currency.currency-thousands-separator,
-                  tr().currency.currency-comma-separator,
-                  tr().currency.currency-symbol,
+                  currency-resolved.currency-thousands-separator,
+                  currency-resolved.currency-comma-separator,
+                  currency-resolved.currency-symbol,
                 ),
               )
             }
@@ -180,26 +180,26 @@
         tr().table-base.total-no-vat,
         format-currency(
           total-no-vat,
-          tr().currency.currency-thousands-separator,
-          tr().currency.currency-comma-separator,
-          tr().currency.currency-symbol,
+          currency-resolved.currency-thousands-separator,
+          currency-resolved.currency-comma-separator,
+          currency-resolved.currency-symbol,
         ),
         ..if not is-kleinunternehmer {
           (
             tr().table-base.total-vat,
             format-currency(
               total-vat,
-              tr().currency.currency-thousands-separator,
-              tr().currency.currency-comma-separator,
-              tr().currency.currency-symbol,
+              currency-resolved.currency-thousands-separator,
+              currency-resolved.currency-comma-separator,
+              currency-resolved.currency-symbol,
             ),
             table.hline(stroke: 0.5pt),
             tr().table-base.total-with-vat,
             format-currency(
               total-with-vat,
-              tr().currency.currency-thousands-separator,
-              tr().currency.currency-comma-separator,
-              tr().currency.currency-symbol,
+              currency-resolved.currency-thousands-separator,
+              currency-resolved.currency-comma-separator,
+              currency-resolved.currency-symbol,
             ),
           )
         },

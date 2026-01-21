@@ -31,7 +31,7 @@ TiefLetter uses a language selection system lovingly dubbed "TiefLang" (though t
 - english-at -- English documents with Austrian formatting and laws applied. Language code "en-at"
 - english-de -- English documents with German formatting and laws applied. Language code "en-de"
 - english-us -- English documents with USA formatting (there are no laws in use that exist in the US to my knowledge). Language code "en-us"
-- deutsch-at -- German documents with Austrian formatting and laws applied. Language code "de-de"
+- deutsch-at -- German documents with Austrian formatting and laws applied. Language code "de-at"
 - deutsch-de -- German documents with German formatting and laws applied. Language code "de-de"
 
 To set a language, call the `select-language` method with either a language code or an element of the `languages` dictionary.
@@ -135,4 +135,4 @@ Creating an offer is similar to creating an invoice. Following are the relevant 
 ![An example image of a document-preset document](examples/document-preset.jpg)
 ![An example image of a letter-preset document](examples/letter-preset.jpg)
 
-There's other classes, `document-preset` and `letter-preset`, which can be used using show rules. Those are relatively self explanatory, examples above.
+There's other classes, `document-preset` and `letter-preset`, which can be used using `show` rules. Those are relatively self explanatory, examples above.
