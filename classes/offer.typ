@@ -45,7 +45,10 @@
 
     show: letter-preset.with(
       sender: seller,
-      footer-left: box(width: 1fr, align(center, seller.name + "\n" + seller.tel + "\n" + seller.email)),
+      footer-left: box(width: 1fr, align(
+        center,
+        seller.name + "\n" + seller.tel + "\n" + seller.email,
+      )),
       footer-middle: footer-middle,
       footer-right: footer-right,
       banner-image: banner-image,
@@ -75,7 +78,10 @@
 
       #set table(stroke: none)
 
-      #let is-kleinunternehmer = seller.at("is-kleinunternehmer", default: false)
+      #let is-kleinunternehmer = seller.at(
+        "is-kleinunternehmer",
+        default: false,
+      )
       #let default-vat-rate = if is-kleinunternehmer { 0 } else { 20 }
 
       #table(
@@ -130,7 +136,8 @@
                   currency-resolved.currency-symbol,
                 ),
                 format-currency(
-                  (row.unit-price + (item-vat-rate / 100) * row.unit-price) * row.quantity,
+                  (row.unit-price + (item-vat-rate / 100) * row.unit-price)
+                    * row.quantity,
                   currency-resolved.currency-thousands-separator,
                   currency-resolved.currency-comma-separator,
                   currency-resolved.currency-symbol,
@@ -141,16 +148,24 @@
                 index + 1,
                 row.description,
                 str(row.at("quantity", default: "1")),
-                format-currency(row.unit-price),
+                format-currency(
+                  row.unit-price,
+                  currency-resolved.currency-thousands-separator,
+                  currency-resolved.currency-comma-separator,
+                  currency-resolved.currency-symbol,
+                ),
                 str(item-vat-rate) + "%",
                 format-currency(
-                  row.at("quantity", default: 1) * (item-vat-rate / 100) * row.unit-price,
+                  row.at("quantity", default: 1)
+                    * (item-vat-rate / 100)
+                    * row.unit-price,
                   currency-resolved.currency-thousands-separator,
                   currency-resolved.currency-comma-separator,
                   currency-resolved.currency-symbol,
                 ),
                 format-currency(
-                  (row.unit-price + (item-vat-rate / 100) * row.unit-price) * row.quantity,
+                  (row.unit-price + (item-vat-rate / 100) * row.unit-price)
+                    * row.quantity,
                   currency-resolved.currency-thousands-separator,
                   currency-resolved.currency-comma-separator,
                   currency-resolved.currency-symbol,
@@ -163,11 +178,16 @@
         table.hline(stroke: 0.5pt),
       )
 
-      #let total-no-vat = items.map(row => row.unit-price * row.at("quantity", default: 1)).sum()
+      #let total-no-vat = (
+        items.map(row => row.unit-price * row.at("quantity", default: 1)).sum()
+      )
       #let total-vat = (
         items
           .map(row => (
-            row.unit-price * row.at("quantity", default: 1) * row.at("vat-rate", default: default-vat-rate) / 100
+            row.unit-price
+              * row.at("quantity", default: 1)
+              * row.at("vat-rate", default: default-vat-rate)
+              / 100
           ))
           .sum()
       )
@@ -226,4 +246,3 @@
     ]
   }
 }
-
