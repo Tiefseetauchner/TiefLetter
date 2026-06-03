@@ -1,6 +1,7 @@
-#import "@preview/tiefletter:0.2.1"
+#import "@preview/tiefletter:0.2.2"
+#import "@preview/tieflang:0.1.0"
 
-#tiefletter.select-language(tiefletter.languages.deutsch-at)
+#tieflang.select-language(tiefletter.languages.deutsch-at)
 
 #show: tiefletter.document-preset.with(
   banner-image: image("header.svg"),
@@ -26,7 +27,7 @@ To use TiefLetter with the Typst web app, choose "Start from template" and selec
 To import the package manually in your Typst project, use:
 
 ```typst
-#import "@preview/tiefletter:0.2.1": invoice
+#import "@preview/tiefletter:0.2.2": invoice
 ```
 
 === Setup

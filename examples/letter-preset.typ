@@ -1,6 +1,7 @@
-#import "@preview/tiefletter:0.2.1"
+#import "@preview/tiefletter:0.2.2"
+#import "@preview/tieflang:0.1.0"
 
-#tiefletter.select-language(tiefletter.languages.deutsch-at)
+#tieflang.select-language(tiefletter.languages.deutsch-at)
 
 #show: tiefletter.letter-preset.with(
   sender: (

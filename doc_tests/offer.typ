@@ -1,5 +1,6 @@
 #import "meta.teco.typ": test-languages
-#import "../lib.typ": offer, select-language
+#import "../lib.typ": offer
+#import "@preview/tieflang:0.1.0": select-language
 
 #for (idx, lang) in test-languages.enumerate() {
   select-language(lang)

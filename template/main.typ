@@ -1,4 +1,4 @@
-#import "@preview/tiefletter:0.2.1": invoice, languages
+#import "@preview/tiefletter:0.2.2": invoice, languages
 #import "@preview/tieflang:0.1.0": select-language
 
 #select-language(languages.deutsch-at)
