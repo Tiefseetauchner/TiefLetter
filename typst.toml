@@ -1,6 +1,6 @@
 [package]
 name = "tiefletter"
-version = "0.2.2"
+version = "0.2.3"
 compiler = "0.14.0"
 authors = ["Lena Tauchner"]
 entrypoint = "lib.typ"
@@ -9,7 +9,7 @@ description = "Invoice and offer template for Austrian freelancers"
 keywords = ["invoice", "german"]
 categories = ["layout", "office"]
 disciplines = []
-homepage = "https://www.lukechriswalker.at"
+homepage = "https://www.lukechriswalker.at/projects/6a26a275b6efd610e8e3928b"
 repository = "https://github.com/Tiefseetauchner/TiefLetter"
 
 [template]
